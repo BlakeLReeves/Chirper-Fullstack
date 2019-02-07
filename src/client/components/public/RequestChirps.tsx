@@ -7,7 +7,7 @@ export interface IRequestAllChirpsProps {
 }
 
 export interface IRequestAllChirpsState {
-    chirps: { id: string, user: string, text: string }[];
+    chirps: { id: number, userid: number, chirp: string, location: string, _created: Date, name: string }[];
 }
 
 class IRequestAllChirps extends React.Component<IRequestAllChirpsProps, IRequestAllChirpsState> {
@@ -19,14 +19,7 @@ class IRequestAllChirps extends React.Component<IRequestAllChirpsProps, IRequest
     async componentDidMount() {
         try {
             let r = await fetch('/api/chirps')
-            let data = await r.json();
-            let chirps = Object.keys(data).map(key => {
-                return {
-                    id: key,
-                    user: data[key].user,
-                    text: data[key].text
-                }
-            });
+            let chirps = await r.json();
             chirps.pop();
             chirps.reverse();
             this.setState({ chirps });
@@ -43,7 +36,7 @@ class IRequestAllChirps extends React.Component<IRequestAllChirpsProps, IRequest
                 </div>
                 <div className="row">
                     {this.state.chirps.map(chirp => {
-                        return <ChirpCard key={chirp.id} chirp={chirp} />
+                        return <ChirpCard key={chirp.id} chirp={ chirp }/>
                     })}
                 </div>
             </>
