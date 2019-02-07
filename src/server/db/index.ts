@@ -1,4 +1,5 @@
 import * as mysql from 'mysql';
+import { rejects } from 'assert';
 
 
 let connection = mysql.createConnection({
@@ -32,7 +33,33 @@ const getOneChirp = (id: number) => {
     });
 };
 
+const deleteChirp = (id: number) => {
+    let query = `
+        DELETE FROM chirps WHERE id = ${id};
+    `;
+    return new Promise ((resolve, reject) => {
+        connection.query(query, (err, results, fields) => {
+            if(err) reject(err);
+            resolve(results);
+        })
+    });
+};
+
+const postChirp = (userid: number, chirp: string) => {
+    let query = `
+        INSERT INTO chirps (userid, chirp) VALUES ( ${userid}, ${chirp} );
+    `;
+    return new Promise ((resolve, reject) => {
+        connection.query(query, (err, results, fields) => {
+            if(err) reject(err);
+            resolve(results);
+        })
+    });
+};
+
 export {
     getAllChirps,
-    getOneChirp
+    getOneChirp,
+    deleteChirp,
+    postChirp
 }
