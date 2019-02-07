@@ -20,8 +20,6 @@ class IRequestAllChirps extends React.Component<IRequestAllChirpsProps, IRequest
         try {
             let r = await fetch('/api/chirps')
             let chirps = await r.json();
-            chirps.pop();
-            chirps.reverse();
             this.setState({ chirps });
         } catch (e) {
             console.log(e);

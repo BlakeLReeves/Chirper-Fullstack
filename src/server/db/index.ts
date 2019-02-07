@@ -11,11 +11,11 @@ let connection = mysql.createConnection({
 
 const getAllChirps = () => {
     let query = `
-        SELECT c.*, u.name FROM chirps c JOIN users u ON u.id = c.userid;
+        SELECT c.*, u.name FROM chirps c JOIN users u ON u.id = c.userid ORDER BY _created DESC;
     `;
     return new Promise((resolve, reject) => {
         connection.query(query, (err, results, fields) => {
-            if(err) reject(err);
+            if (err) reject(err);
             resolve(results);
         })
     });
@@ -23,11 +23,11 @@ const getAllChirps = () => {
 
 const getOneChirp = (id: number) => {
     let query = `
-        SELECT * FROM chirps WHERE id = ${id};
+        SELECT c.*, u.name FROM chirps c JOIN users u ON u.id = c.userid WHERE c.id = ${id};
     `;
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         connection.query(query, (err, results, fields) => {
-            if(err) reject(err);
+            if (err) reject(err);
             resolve(results);
         })
     });
@@ -37,9 +37,9 @@ const deleteChirp = (id: number) => {
     let query = `
         DELETE FROM chirps WHERE id = ${id};
     `;
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         connection.query(query, (err, results, fields) => {
-            if(err) reject(err);
+            if (err) reject(err);
             resolve(results);
         })
     });
@@ -47,19 +47,58 @@ const deleteChirp = (id: number) => {
 
 const postChirp = (userid: number, chirp: string) => {
     let query = `
-        INSERT INTO chirps (userid, chirp) VALUES ( ${userid}, ${chirp} );
+        INSERT INTO chirps (userid, chirp) VALUES (${userid}, '${chirp}');
     `;
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         connection.query(query, (err, results, fields) => {
-            if(err) reject(err);
+            if (err) reject(err);
             resolve(results);
         })
     });
 };
 
+const updateChirp = (id: number, chirp: string) => {
+    let query = `
+        UPDATE chirps SET chirp = "${chirp}" WHERE id = ${id};
+    `;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (err, results, fields) => {
+            if (err) reject(err);
+            resolve(results);
+        })
+    });
+};
+
+const getAllUsers = () => {
+    let query = `
+        SELECT * FROM users;
+    `;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (err, results, fields) => {
+            if (err) reject(err);
+            resolve(results);
+        })
+    });
+}
+
+const getOneUser = (id: number) => {
+    let query = `
+        SELECT * FROM users WHERE id = ${id};
+    `;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (err, results, fields) => {
+            if (err) reject(err);
+            resolve(results);
+        })
+    });
+}
+
 export {
     getAllChirps,
     getOneChirp,
     deleteChirp,
-    postChirp
+    postChirp,
+    updateChirp,
+    getAllUsers,
+    getOneUser
 }

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { getAllChirps, getOneChirp, deleteChirp, postChirp } from '../../db';
+import { getAllChirps, getOneChirp, deleteChirp, postChirp, updateChirp } from '../../db';
 
 const router = express.Router();
 
@@ -21,10 +21,26 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-    let userid = req.body.userid;
-    let chirp = req.body.chirp;
-    let newChirp = await postChirp(userid, chirp);
-    res.send(newChirp);
+    try{
+        let userid = req.body.userid;
+        let chirp = req.body.chirp;
+        let newChirp = await postChirp(userid, chirp);
+        res.send(newChirp);
+    } catch(err) {
+        if(err) console.log(err);
+    }
+});
+
+router.put('/:id', async (req, res, next) => {
+    try{
+        let id = req.params.id;
+        let userid = req.body.userid;
+        let chirp = req.body.chirp;
+        let newChirp = await updateChirp(id, chirp);
+        res.send(newChirp);
+    } catch(err) {
+        if(err) console.log(err);
+    }
 });
 
 // router.post('/', (req, res, next) => {
